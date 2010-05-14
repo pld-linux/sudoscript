@@ -1,0 +1,54 @@
+--- sudoscript-2.1.2.a/sudoscriptd.linux.init	2004-11-22 17:38:59.000000000 +0100
++++ sudoscript-2.1.2.b/sudoscriptd.linux.init	2010-05-14 23:13:06.000000000 +0200
+@@ -21,20 +21,25 @@
+ 
+ start()
+ {
+-	echo -n $"Starting $prog:"
+-	initlog -c "$SUDOSCRIPTD" $OPTS && success || failure
+-	RETVAL=$?
+-	[ "$RETVAL" = 0 ] && touch /var/lock/subsys/sudoscriptd
+-	echo
++	if [ ! -f /var/lock/subsys/sudoscriptd ]; then
++		msg_starting $prog
++		daemon initlog -c "$SUDOSCRIPTD" $OPTS
++		RETVAL=$?
++		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sudoscriptd
++	else
++		msg_already_running $prog
++	fi
+ }
+ 
+ stop()
+ {
+-	echo -n $"Stopping $prog:"
+-	killproc $SUDOSCRIPTD -HUP
+-	RETVAL=$?
+-	[ "$RETVAL" = 0 ] && rm -f /var/lock/subsys/susoscriptd
+-	echo
++	if [ -f /var/lock/subsys/sudoscriptd ]; then
++		msg_stopping $prog
++		killproc sudoscriptd
++		rm -f /var/lock/subsys/sudoscriptd
++	else
++		msg_not_running $prog
++	fi
+ }
+ 
+ case "$1" in
+@@ -49,11 +54,11 @@
+ 		start
+ 		;;
+ 	status)
+-		status $SUDOSCRIPTD
+-		RETVAL=$?
++		status $prog
++		exit $?
+ 		;;
+ 	*)
+ 		echo $"Usage: $0 {start|stop|restart|status}"
+-		RETVAL=1
++		exit 1
+ esac
+-exit $RETVAL
++exit 0
