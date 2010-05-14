@@ -12,11 +12,11 @@ Group:		Applications/System
 Source0:	http://sudoscript.org/%{name}-%{version}.tar.gz
 # Source0-md5:	ac0f8128eef9bf19f06092a1a6d6cf94
 Patch0:		%{name}-init.patch
-%define	__make	/usr/bin/make -j1
 URL:		http://sudoscript.org
-BuildRequires:	perl
+BuildRequires:	perl-base
+BuildRequires:	perl-tools-pod
 Requires:	/sbin/chkconfig
-Requires:	perl
+Requires:	perl-base
 Requires:	sudo
 Provides:	ss
 Provides:	sudoscriptd
@@ -42,11 +42,11 @@ size of the logs produced, since they can grow quite large.
 %patch0 -p1
 
 %build
-%{__make} doc
+%{__make} -j1 doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} \
+%{__make} -j1 \
 	DESTDIR=$RPM_BUILD_ROOT \
 	SSRPM="n" \
 	INSTALL=install \
