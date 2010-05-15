@@ -1,0 +1,38 @@
+--- sudoscript-2.1.2/Makefile~	2004-11-22 17:38:59.000000000 +0100
++++ sudoscript-2.1.2/Makefile	2010-05-15 08:45:43.234275888 +0200
+@@ -440,18 +440,18 @@
+ 
+ install: oscheck dircheck install-daemon install-program install-module install-mans install-init install-doc
+ 
+-install-daemon: $(SDSD)
++install-daemon: $(SDSD) dircheck
+ 	$(INSTALL) $(INSTDAEMONARGS) -m 700 $(SDSD) $(INSTSBIN)/$(SDSD);
+ 
+-install-program: $(SDS)
++install-program: $(SDS) dircheck
+ 	$(INSTALL) $(INSTARGS) -m 755 $(SDS) $(INSTBIN)/$(SDS);
+ 	$(RM) -f $(INSTBIN)/$(sds);
+ 	$(LN) -sf $(SDS) $(INSTBIN)/$(sds);
+ 
+-install-module: $(SDSL)
++install-module: $(SDSL) dircheck
+ 	$(INSTALL)  $(INSTARGS) -m 755 $(SDSL) $(INSTLIB)/$(SDSL);
+ 
+-install-mans: 
++install-mans:  dircheck
+ 	$(INSTALL) $(INSTARGS) -m 644 $(SDSM) $(INSTMAN1)/$(SDSM);
+ 	$(RM) -f $(INSTMAN1)/$(sdsM);
+ 	$(LN) -sf $(SDSM) $(INSTMAN1)/$(sdsM);
+@@ -459,10 +459,10 @@
+ 	$(INSTALL) $(INSTARGS) -m 644 $(SDSDM) $(INSTMAN8)/$(SDSDM);
+ 	$(INSTALL) $(INSTARGS) -m 644 $(SDSM8) $(INSTMAN8)/$(SDSM8);
+ 
+-install-init: $(INITSCR)
++install-init: $(INITSCR) dircheck
+ 	$(INSTALL) $(INSTARGS) -m 755 $(INITSCR) $(INSTINI)/$(INSTININAME);
+ 
+-install-doc: $(DISTDOC) $(XMLSTUFF)
++install-doc: $(DISTDOC) $(XMLSTUFF) dircheck
+ 	for d in $(DISTDOC) $(SSPOD);  do \
+ 	  $(INSTALL) $$d $(INSTDOC); \
+ 	done
