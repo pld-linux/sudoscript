@@ -12,6 +12,7 @@ Group:		Applications/System
 Source0:	http://sudoscript.org/%{name}-%{version}.tar.gz
 # Source0-md5:	ac0f8128eef9bf19f06092a1a6d6cf94
 Patch0:		%{name}-init.patch
+Patch1:		%{name}-parallel-make.patch
 URL:		http://sudoscript.org
 BuildRequires:	perl-base
 BuildRequires:	perl-tools-pod
@@ -40,13 +41,14 @@ size of the logs produced, since they can grow quite large.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
-%{__make} -j1 doc
+%{__make} doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} -j1 \
+%{__make} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	SSRPM="n" \
 	INSTALL=install \
